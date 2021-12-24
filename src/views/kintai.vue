@@ -22,6 +22,7 @@
 
 <script>
 import axios from 'axios'
+//外部のindex.jsをapiの名前にして、apiのメソッドを呼ぶためのimport
 import api from '../index'
 export default {
   data(){
@@ -34,9 +35,11 @@ export default {
     }
   },
   created(){
-
+      //階層を深くしないようにするための処理
       var self = this
+      //this.idtokenにローカルストレージのIDTokenを入れる
       this.idtoken = sessionStorage.getItem('IDToken')
+
       //データベースからデータを取得(動的にURLを変更)
     axios( {
           method:'GET',// GET,POSTなど
@@ -45,6 +48,7 @@ export default {
           'X-Api-Key':this.idtoken//リクエストヘッダー
         }},
         )
+        //成功したらself.countに帰ってきたdataのlengthを入れる
       .then(response =>
       self.count = response.data.length);
       // this.items = response.data
@@ -86,7 +90,10 @@ export default {
         "number":0,
         "count":this.count
       }
-
+      //外部のjsファイル（api）からpostメソッドを使用
+      //第一引数・apigatewayのURL
+      //第二引数・送る値
+      //第三引数・ログインできたかどうかのboolean型
       api.post("https://3rh22uarg3.execute-api.us-east-1.amazonaws.com/kintaiApi/putitem",box,true)
 
       alert("出勤時間は" + start_date+start_time + "です")
@@ -133,6 +140,10 @@ export default {
         "count": this.count
       }
 
+      //外部のjsファイル（api）からpostメソッドを使用
+      //第一引数・apigatewayのURL
+      //第二引数・送る値
+      //第三引数・ログインできたかどうかのboolean型
       api.post("https://3rh22uarg3.execute-api.us-east-1.amazonaws.com/kintaiApi/putitem",box1,true)
 
       alert("出勤時間は" + end_date + end_time + "です")
@@ -151,8 +162,9 @@ export default {
     },
     async datalist(){
       var self = this
-      //userboxの初期化
+      //ボタンを押すたびにuserboxの初期化を行い、再取得
       this.userbox = []
+      //ローカルストレージからIDTokenを取得して、this.idtokenに入れる
       this.idtoken = sessionStorage.getItem('IDToken')
       //データベースからデータを取得(動的にURLを変更)
      var box = await axios( {
@@ -162,6 +174,7 @@ export default {
           'X-Api-Key':this.idtoken//リクエストヘッダー
         }},
         )
+        //成功したら返り値responseのdataをthis.itemsに入れる
      .then(response => this.items = response.data);
 
     console.log("ここにボックスが入ってます")
@@ -173,10 +186,12 @@ export default {
      console.log(this.worklist)
      //ストレージからusernameを取得して、usernameに入れる
      this.username = sessionStorage.getItem('username')
-
+    
+    //データーベースの中身を表示させるためにforで回す
      for(var i = 0; i < self.worklist.length; i++){
       //  console.log(this.worklist[i].id)
       //  console.log(this.username)
+      //もしworklistのi番目のidがusernameと同じなら
        if(self.worklist[i].id === self.username){
          self.userbox.push(self.worklist[i])
          console.log(self.worklist[i])

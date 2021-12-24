@@ -54,7 +54,6 @@ export default {
       // console.log(response));
       // self.count = response.data.count
       // console.log(this.count)  
-      //aaaaaa
   },
   methods:{
     start_work(){

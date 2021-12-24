@@ -16,7 +16,6 @@
       </table>
     </div>
     <button @click="logout">ログアウト</button>
-    <!-- <button @click="cnt">カウント</button> -->
   </div>
 </template>
 
@@ -58,9 +57,6 @@ export default {
       //aaaaaa
   },
   methods:{
-    // cnt(){
-    //     console.log(this.count)
-    // },
     start_work(){
       //一時的に保存したデータを取得
       //ストレージからusernameを取得
@@ -76,8 +72,6 @@ export default {
       var start_date = new Date().toLocaleDateString()
       var start_time = new Date().toLocaleTimeString()
       console.log(start_date,start_time)
-
-
 
       //カウントを１足していく
       this.count += 1
@@ -97,8 +91,6 @@ export default {
       api.post("https://3rh22uarg3.execute-api.us-east-1.amazonaws.com/kintaiApi/putitem",box,true)
 
       alert("出勤時間は" + start_date+start_time + "です")
-
-      //JSON.stringify(["id","date","time","type","number","count"]);
         
       //データベースにデータを送る
       // axios({

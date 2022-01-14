@@ -39,10 +39,12 @@ export default {
       //this.idtokenにローカルストレージのIDTokenを入れる
       this.idtoken = sessionStorage.getItem('IDToken')
 
+      //console.log(this.idtoken)
+
       //データベースからデータを取得(動的にURLを変更)
     axios( {
           method:'GET',// GET,POSTなど
-          url:"https://3rh22uarg3.execute-api.us-east-1.amazonaws.com/kintaiApi/getitem",// APIのURL
+          url:"https://itnwad21sg.execute-api.us-east-1.amazonaws.com/dev/getitem",// APIのURL
           headers:{
           'X-Api-Key':this.idtoken//リクエストヘッダー
         }},
@@ -87,7 +89,7 @@ export default {
       //第一引数・apigatewayのURL
       //第二引数・送る値
       //第三引数・ログインできたかどうかのboolean型
-      api.post("https://3rh22uarg3.execute-api.us-east-1.amazonaws.com/kintaiApi/putitem",box,true)
+      api.post("https://itnwad21sg.execute-api.us-east-1.amazonaws.com/dev/putitem",box,true)
 
       alert("出勤時間は" + start_date+start_time + "です")
         
@@ -135,7 +137,7 @@ export default {
       //第一引数・apigatewayのURL
       //第二引数・送る値
       //第三引数・ログインできたかどうかのboolean型
-      api.post("https://3rh22uarg3.execute-api.us-east-1.amazonaws.com/kintaiApi/putitem",box1,true)
+      api.post("https://itnwad21sg.execute-api.us-east-1.amazonaws.com/dev/putitem",box1,true)
 
       alert("出勤時間は" + end_date + end_time + "です")
 
@@ -160,7 +162,7 @@ export default {
       //データベースからデータを取得(動的にURLを変更)
      var box = await axios( {
           method:'GET',// GET,POSTなど
-          url:"https://3rh22uarg3.execute-api.us-east-1.amazonaws.com/kintaiApi/getitem",// APIのURL
+          url:"https://itnwad21sg.execute-api.us-east-1.amazonaws.com/dev/getitem",// APIのURL
           headers:{
           'X-Api-Key':this.idtoken//リクエストヘッダー
         }},

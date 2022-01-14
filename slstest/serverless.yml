@@ -1,0 +1,111 @@
+#サービス名の設定（プロジェクト名）
+service: slstest
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: python3.9
+  lambdaHashingVersion: 20201221
+  region: us-east-1
+  # Lambdaに適用するIAM Roleを指定
+  role: arn:aws:iam::187181299345:role/serverless-role
+  Resource: "*" 
+
+#Apigatewayとlambdaの設定
+functions:
+  #hello1(post)の設定
+  hello1:
+    #hundler
+    handler: handler1.hello
+    events: 
+        #Apigateway
+        - http:
+              path: /putitem
+              method: post
+              cors:
+                origin: "*"
+                #headerの設定
+                headers: 
+                  - Content-Type
+                  - X-Amz-Date
+                  - Authorization
+                  - X-Api-Key
+                  - X-Amz-Security-Token
+                  - X-Amz-User-Agent
+              allowCredentials: true
+              #lambda統合プロキシの設定
+              integration: lambda
+
+  #hello(get)の設定
+  hello:
+    #hundler
+    handler: handler.hello
+    events:
+        #Apigatewayの設定
+        - http:
+              path: /getitem
+              method: get
+              cors:
+                origin: "*"
+                #headerの設定
+                headers: 
+                  - Content-Type
+                  - X-Amz-Date
+                  - Authorization
+                  - X-Api-Key
+                  - X-Amz-Security-Token
+                  - X-Amz-User-Agent
+                #lambda統合プロキシの設定
+              integration: lambda
+
+resources:
+  Resources:
+    #cognitoの設定
+    CognitoAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        Name: CognitoAuthorizer
+        RestApiId: !Ref ApiGatewayRestApi 
+        IdentitySource: method.request.header.Authorization
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          #cognitoのarnを指定
+          - arn:aws:cognito-idp:us-east-1:187181299345:userpool/us-east-1_UxIGAiUZ3
+
+    #dynamodbの設定
+    DemoDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        #テーブル作成idとcountがあるテーブル
+        AttributeDefinitions: [
+          {
+            AttributeName: "id",
+            AttributeType: "S",
+          },
+          {
+            AttributeName: "count",
+            AttributeType: "N",
+          },
+        ]
+        #パーティションキーとソートキーの属性設定
+        KeySchema: [
+            #パーティションキーの設定
+            {
+              KeyType: "HASH",
+              AttributeName: "id",
+            },
+            #ソートキーの設定
+            {
+              KeyType: "RANGE",
+              AttributeName: "count",
+            },
+          ]
+        #テーブルに必要な 1 秒あたりの読み込み/書き込み数
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+          #テーブルの名前設定
+        TableName: demo-sls-person
+
